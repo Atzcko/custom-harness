@@ -1,0 +1,40 @@
+---
+title: D010 - llm-wiki ships inside the harness; graphify and obsidian-markdown are checked for
+type: decision
+status: accepted
+date: 2026-09-13
+tags:
+  - decision
+  - dependencies
+---
+
+# D010 — llm-wiki ships inside the harness; graphify and obsidian-markdown are checked for
+
+## Context
+
+The understand phase depends on three skills: graphify for the knowledge
+graph, llm-wiki for the compiled wiki, obsidian-markdown for vault
+conventions. On a fresh machine any of them may be missing, and a harness that
+fails halfway through its first phase is worse than one that refuses to start.
+llm-wiki is the owner's own skill, so it can travel with the harness.
+
+## Decision
+
+`bundled/llm-wiki/` is a copy of the llm-wiki skill and is the fallback when
+no installed copy is found; the installer links it into the skills folders
+when llm-wiki is absent. graphify and obsidian-markdown are third-party and
+are not bundled. `harness doctor` runs before anything else and reports which
+of the three are installed, where, plus Python, `uv`, the graphify binary and
+Obsidian. The understand playbook stops on a missing hard dependency and says
+how to get it.
+
+## Consequences
+
+The bundled copy can drift from the owner's installed llm-wiki. `doctor`
+compares the two and says which is newer; the owner decides which way to
+sync. Bundling a third-party skill would raise licensing and update questions
+the harness does not want, so graphify stays a dependency.
+
+## Related
+
+- [[D007 - The core is tool-neutral; each coding agent gets an adapter]]

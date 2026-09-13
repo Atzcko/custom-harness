@@ -29,3 +29,26 @@ Append-only, newest at the bottom. What happened; the decisions say why.
   the library's track-record fields was reset afterwards.
 - Pilot project: Desktop gadget, to be started with `/harness` in a session
   rooted there.
+
+## 2026-09-13 — v0.2.0, tool-neutral, model registry, preflight
+
+- The owner added three requirements after the first build: the skill must
+  work in Codex, Gemini or any other coding agent, not only Claude Code; it
+  must know the latest models and keep moving agents onto them; and it must
+  check for its dependencies before use, with llm-wiki (the owner's own
+  skill) bundled in.
+- A researcher agent verified the current facts from the tools' own docs:
+  Codex custom agents are TOML under `.codex/agents/`, Gemini CLI subagents
+  are markdown under `.gemini/agents/` and cannot nest, Cursor and OpenCode
+  have their own markdown forms, and all five tools read skills from
+  `~/.agents/skills`. Model pages gave the lineups; the local Codex model
+  cache confirmed the OpenAI ids. Recorded in `references/targets.md` and
+  `library/models.json`.
+- Rewrote `scripts/harness.py` around targets and the registry: `compile`
+  renders per tool plus a generic prompt, `doctor` and `models` are new,
+  portable memory moved to `library/memory/` with a link for Claude Code.
+  `HARNESS_LIBRARY` and `HARNESS_HOME` let tests use scratch copies after a
+  fixture run leaked memory folders and links into the real library.
+- Decisions D007 to D010; D003 superseded by D009 for the memory location.
+- Doctor found that the two installed llm-wiki copies (`~/.agents/skills`
+  and `~/.claude/skills`) differ; the bundled copy follows the newer one.

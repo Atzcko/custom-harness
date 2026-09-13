@@ -4,7 +4,7 @@ title: Researcher
 type: agent
 version: 1
 tier: 2
-model: sonnet
+model:
 description: Finds and verifies facts from documentation, source code, standards and the web, and returns a short sourced note with quotes and links rather than opinions. Use before a design decision, when a library's behaviour is uncertain, when the user asks how something works outside the project, or when a claim needs a citation.
 tags: [research, documentation, web, sources, verification, citations, facts]
 skills: []

@@ -26,7 +26,7 @@ The script decides mechanically so the gardener does not have to argue with
 itself:
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" risk --a tester --b qa-runner
+harness risk --a tester --b qa-runner
 ```
 
 `auto` means apply; `ask` means write the proposal and stop.
@@ -36,7 +36,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" risk --a tester --b qa-runner
 1. **Find candidates.**
 
    ```bash
-   python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" overlap
+   harness overlap
    ```
 
    Merge candidates are pairs with similar tags, descriptions and tools.
@@ -47,7 +47,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" risk --a tester --b qa-runner
 2. **Decide each candidate** with `risk`. For `auto`:
 
    ```bash
-   python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" merge --into firmware-tester --from tester,qa-runner --why "same tools, same tasks, one had the memory"
+   harness merge --into firmware-tester --from tester,qa-runner --why "same tools, same tasks, one had the memory"
    ```
 
    The script archives the sources, scaffolds the merged note with the union
@@ -63,7 +63,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" risk --a tester --b qa-runner
    successful is ready:
 
    ```bash
-   python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" promote firmware-reviewer
+   harness promote firmware-reviewer
    ```
 
    Promotion copies the charter to the library, drops the project sections,

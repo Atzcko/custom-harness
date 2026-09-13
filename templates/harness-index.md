@@ -23,10 +23,12 @@ knows where it left off.
 | `decisions/` | H-numbered decision records, including automated merges |
 | [[ledger]] | every delegated task, its outcome and cost |
 | [[evolution]] | lessons for the skill itself |
-| `wiki/` | the project's llm-wiki; schema in `wiki/CLAUDE.md` |
+| `wiki/` | the project's llm-wiki; schema in `wiki/SCHEMA.md` |
 
-Compiled agents live in `.claude/agents/` at the project root. They are
-generated; edit the notes here and run `harness.py compile`.
+Compiled agents live in each tool's own folder at the project root
+(`.claude/agents/`, `.codex/agents/`, `.gemini/agents/`, `.cursor/agents/`,
+`.opencode/agents/`) and as generic prompts in `compiled/`. They are
+generated; edit the notes here and run `harness compile`.
 
 ## Decisions
 

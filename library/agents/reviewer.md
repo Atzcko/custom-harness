@@ -4,7 +4,7 @@ title: Reviewer
 type: agent
 version: 1
 tier: 1
-model: opus
+model:
 description: Reviews a change for correctness, safety and fit with the project's decisions before it lands, and returns findings ranked by severity with the failing scenario for each. Use before merging or flashing anything non-trivial, when a change touches a constraint recorded in a decision note, or when the user asks whether something is safe.
 tags: [review, correctness, safety, quality, security, decisions, verification]
 skills: []

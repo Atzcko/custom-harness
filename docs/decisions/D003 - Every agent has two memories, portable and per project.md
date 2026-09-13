@@ -1,12 +1,18 @@
 ---
 title: D003 - Every agent has two memories, portable and per project
 type: decision
-status: accepted
+status: superseded
+superseded_by: "[[D009 - Portable memory lives in the library, not in a tool's directory]]"
 date: 2026-09-13
 tags:
   - decision
   - memory
 ---
+
+> [!note] Superseded on 2026-09-13 by [[D009 - Portable memory lives in the library, not in a tool's directory]].
+> The two-memory rule below still holds; only the location of the portable
+> memory changed, because a directory under `~/.claude/` is invisible to other
+> tools and to git.
 
 # D003 — Every agent has two memories, portable and per project
 

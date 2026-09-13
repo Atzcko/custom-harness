@@ -4,37 +4,39 @@
     {
       "id": 1,
       "prompt": "Set up the harness for this project. It is a small Python CLI with a README, a src/ folder and tests/. Ask me what you need to know.",
-      "expected_output": "A harness/ folder with Harness.md, brief.md, architecture.md, ledger.md, evolution.md and a wiki schema; the graph built or attempted; the interview started in batches of three or four questions with the definition-of-done and must-never-happen questions included; brief.md not marked ready until those are answered.",
+      "expected_output": "doctor runs first; a harness/ folder with Harness.md, brief.md, architecture.md, ledger.md, evolution.md and a wiki schema; the graph built or attempted; the interview started in batches of three or four questions with the definition-of-done and must-never-happen questions included; brief.md not marked ready until those are answered.",
       "files": [],
       "expectations": [
+        "harness doctor was run before init",
         "harness/brief.md exists and its status is draft until the definition of done and the danger list are answered",
         "The assistant asked at most four questions in its first batch",
         "The questions include what done means and what must never happen automatically",
-        "The assistant ran harness.py init rather than creating the files by hand",
-        "The project's CLAUDE.md contains the harness pointer block"
+        "The assistant ran harness init rather than creating the files by hand",
+        "The project's instruction file contains the harness pointer block"
       ]
     },
     {
       "id": 2,
       "prompt": "We need an agent that writes release notes from the git log before every tag. Add it to the harness.",
-      "expected_output": "The assistant matches the role against the library, finds summarizer or scribe as a close match, creates a linked instance note with an overlay rather than a new draft, compiles, and reports the match score and the outcome (reuse or adapt) with one line of reasoning.",
+      "expected_output": "The assistant matches the role against the library, finds summarizer or scribe as a close match, creates a linked instance note with an overlay rather than a new draft, compiles, and reports the match score and the outcome (reuse or adapt) with one line of reasoning. It does not pin a model.",
       "files": [],
       "expectations": [
-        "harness.py match was run with a role description before any note was written",
+        "harness match was run with a role description before any note was written",
         "The new instance note links to a library agent (library field set) rather than being a local draft",
-        "harness.py compile was run and .claude/agents/ contains the new agent",
+        "The instance note has no model pin; the tier decides",
+        "harness compile was run and the compiled definitions exist for every detected tool",
         "The instance note's Project context section names the git log and the tag as inputs"
       ]
     },
     {
       "id": 3,
       "prompt": "I think tester and qa-runner do the same thing. Clean up the agents.",
-      "expected_output": "The assistant runs overlap, then risk for the pair, and because both are tier 3 with no danger flags applies the merge automatically with harness.py merge, rewrites the merged charter, and reports the decision id and the undo command. It does not ask for permission.",
+      "expected_output": "The assistant runs overlap, then risk for the pair, and because both are tier 3 with no danger flags applies the merge automatically with harness merge, rewrites the merged charter, and reports the decision id and the undo command. It does not ask for permission.",
       "files": [],
       "expectations": [
-        "harness.py overlap and harness.py risk were run before the merge",
+        "harness overlap and harness risk were run before the merge",
         "The merge was applied without asking the user, since the policy returned auto",
-        "A decision note H0nn exists with status accepted and an Undo section naming harness.py undo",
+        "A decision note H0nn exists with status accepted and an Undo section naming harness undo",
         "The source notes are in harness/agents/_archive/ and not deleted",
         "The merged charter reads as one agent, not two sections stapled together"
       ]
@@ -45,9 +47,34 @@
       "expected_output": "The assistant recognises that the agent is high in the chain and carries a danger flag, so the policy returns ask; it writes a proposed decision note and presents the change to the user in two or three sentences instead of applying it.",
       "files": [],
       "expectations": [
-        "harness.py risk returned ask and the assistant did not run merge without --approved",
+        "harness risk returned ask and the assistant did not run merge without --approved",
         "A decision note with status proposed exists",
         "The user was told what would change, why, and how to undo it, in a few sentences"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Start of session in a project that already has a harness. The model registry was last checked 40 days ago.",
+      "expected_output": "The assistant runs doctor, models check and status; sees the registry is stale; delegates the refresh brief from references/models.md to the researcher; applies changes with harness models set naming the source page; runs models touch and compile; and notes the change in harness/evolution.md. It does not edit models.json by hand and does not pin models in charters.",
+      "files": [],
+      "expectations": [
+        "harness models check was run and reported stale",
+        "The researcher was given the refresh brief rather than the assistant guessing model ids",
+        "Every models set call carries a --source URL",
+        "harness compile was run after the registry changed",
+        "No library charter gained a model pin"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "This project is worked on with Codex, not Claude Code. Set up the harness so Codex can use the agents.",
+      "expected_output": "init detects Codex (AGENTS.md or .codex present) and writes the pointer into AGENTS.md; compile writes .codex/agents/<name>.toml with name, description, developer_instructions and a model from the openai provider, plus the roster table in AGENTS.md; nothing in the playbooks refers to Claude-only mechanisms.",
+      "files": [],
+      "expectations": [
+        "AGENTS.md contains the harness pointer block and, after compile, the generated roster table",
+        ".codex/agents/ contains one .toml per active agent with name, description and developer_instructions",
+        "The models in the TOML files come from the openai provider in library/models.json",
+        "The assistant did not tell the user to use a Claude-specific command"
       ]
     }
   ]

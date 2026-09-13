@@ -3,9 +3,10 @@
 This directory is an **LLM-maintained wiki** (the "llm-wiki" pattern) kept by
 the project's agent harness. The project's own files are the primary sources;
 `raw/` holds external material the owner hands over; `wiki/` holds pages the
-LLM writes and maintains; this file is the schema. The owner curates sources
-and asks questions; the harness's librarian does the filing, cross-referencing
-and bookkeeping.
+LLM writes and maintains; this file (`SCHEMA.md`) is the schema, and the
+`CLAUDE.md`, `AGENTS.md` or `GEMINI.md` stubs beside it only point here so
+every tool finds it. The owner curates sources and asks questions; the
+harness's librarian does the filing, cross-referencing and bookkeeping.
 
 **Purpose:** compile what the project's code and documents say into pages an
 agent can read in a minute, so that no agent re-derives the project from

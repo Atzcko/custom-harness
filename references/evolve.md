@@ -11,7 +11,7 @@ loop, a version bump at the end.
   each with its origin and date, and a `processed` mark once acted on.
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" lessons collect
+harness lessons collect
 ```
 
 moves new lines from the project into the library without duplicates.
@@ -44,8 +44,22 @@ and fix what it reports. It needs PyYAML, which the system Python lacks, so
 run it through `uv`:
 
 ```bash
-uv run --with pyyaml python "$HOME/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/scripts/quick_validate.py" "${CLAUDE_SKILL_DIR}"
+uv run --with pyyaml python "$HOME/.claude/plugins/marketplaces/claude-plugins-official/plugins/skill-creator/skills/skill-creator/scripts/quick_validate.py" "$HOME/.agents/skills/harness"
 ```
+
+The validator is a Claude Code plugin, so on a machine without it, check the
+frontmatter by hand: `name`, `description`, and nothing the Agent Skills
+standard does not allow.
+
+## Keeping the registry and the adapters current
+
+Two more things age besides the playbooks:
+
+- `library/models.json`: `harness models check` says when. The refresh brief
+  is in [models.md](models.md).
+- `references/targets.md`: what each tool reads. When a tool changes its
+  agent format or skills folder, the renderer in `scripts/harness.py` and the
+  table change together, with the date verified.
 
 For changes to the playbooks, the evals in `evals/evals.json` are the
 regression suite. The skill-creator skill runs them with and without the

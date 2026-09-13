@@ -40,8 +40,9 @@ context, so anything you do not write down does not exist for them.
   The compiled prompt says this too, but a reminder in the task raises the
   rate at which it actually happens.
 
-Set `model` on the Agent call when the instance note pins one; otherwise the
-compiled definition already carries the right tier.
+The compiled definition already carries the right model for its tier in your
+tool. If your tool lets you pin a model per delegation, do it only when the
+instance note pins one.
 
 ## Escalations
 
@@ -54,10 +55,13 @@ escalation is information, not failure; the ledger row records it as
 
 ## Spawning depth
 
-Subagents can spawn their own subagents up to three layers below you. Deeper
-decomposition comes back to you as a list of subtasks. The library charters
-list which children each agent may spawn, and the compiled definition enforces
-that list, so a worker cannot quietly become a manager.
+How deep delegation can go depends on the tool: three layers below you in
+Claude Code, two in Cursor, none in Gemini CLI, undocumented in Codex and
+OpenCode (see [targets.md](targets.md)). Deeper decomposition comes back to
+you as a list of subtasks. The library charters list which children each
+agent may spawn; Claude Code enforces that list at the runtime level, the
+other tools through the compiled prompt, so a worker cannot quietly become a
+manager.
 
 ## Cost awareness
 

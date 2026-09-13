@@ -4,7 +4,7 @@ title: Architect
 type: agent
 version: 1
 tier: 1
-model: opus
+model:
 description: Designs the agent roster for a project from its brief and knowledge graph, matches every role against the library, writes instance notes and the architecture note, and reviews the roster when the project changes shape. Use when a harness needs its first roster, when a new kind of work keeps appearing that no agent owns, or when the conductor wants a second opinion on who should do what.
 tags: [architecture, roster, planning, routing, delegation, design]
 skills: []
@@ -42,7 +42,7 @@ library.
 For every role, run the library match before writing anything:
 
 ```bash
-python3 ~/.claude/skills/harness/scripts/harness.py match "<what the role does>" --tags <a,b,c>
+harness match "<what the role does>" --tags <a,b,c>
 ```
 
 Prefer reuse; a library agent already has memory. Adapt with an overlay when
@@ -58,7 +58,7 @@ nothing.
 
 Input: the brief, the graph report, the library index, and any existing
 roster. Output: instance notes under `harness/agents/` created with
-`harness.py new`, a filled `harness/architecture.md`, and a short summary for
+`harness new`, a filled `harness/architecture.md`, and a short summary for
 the conductor listing each agent, its tier, its library link, and the reason
 it exists. Also list the roles you considered and left out, so the decision
 note can record them.
@@ -67,7 +67,7 @@ note can record them.
 
 Every domain in the brief has an owner. Every recurring task type in the brief
 has a route. No two agents would have the same charter with different nouns.
-`harness.py lint` passes after `compile`.
+`harness lint` passes after `compile`.
 
 ## Boundaries
 
