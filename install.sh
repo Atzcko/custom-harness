@@ -45,10 +45,17 @@ for root in "${ROOTS[@]}"; do
   link_into "$root" harness "$HERE"
 done
 
-# bundled llm-wiki, only where no llm-wiki exists at all
+# bundled llm-wiki, only where no llm-wiki exists at all. A real folder or a
+# link to somewhere else (for example the owner's skills repository) counts as
+# installed; only our own bundled link does not.
 have_wiki=""
 for root in "$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.gemini/skills"; do
-  if [ -f "$root/llm-wiki/SKILL.md" ] && [ ! -L "$root/llm-wiki" ]; then have_wiki="$root/llm-wiki"; fi
+  if [ -f "$root/llm-wiki/SKILL.md" ]; then
+    if [ -L "$root/llm-wiki" ] && [ "$(readlink "$root/llm-wiki")" = "$HERE/bundled/llm-wiki" ]; then
+      continue
+    fi
+    have_wiki="$root/llm-wiki"
+  fi
 done
 if [ -n "$have_wiki" ]; then
   echo "llm-wiki: installed at $have_wiki (bundled copy at bundled/llm-wiki stays as fallback)"

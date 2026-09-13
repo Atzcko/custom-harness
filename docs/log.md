@@ -67,3 +67,11 @@ Append-only, newest at the bottom. What happened; the decisions say why.
   ids open a pull request.
 - Pushed `main` at v0.1.0 as the base and opened a pull request carrying
   v0.2.0 and v0.3.0.
+
+## 2026-09-13 — v0.3.1, the installer and the skills repository
+
+- The owner's skills moved into one repository (`Atzcko/skills`) that links
+  each skill into the tool folders. Its installer runs this one afterwards,
+  and this one then replaced the linked llm-wiki with its bundled copy,
+  because it only counted a real folder as installed. Fixed: only our own
+  bundled link counts as "not installed".

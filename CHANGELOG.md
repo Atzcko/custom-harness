@@ -4,6 +4,13 @@ Semantic versioning. MAJOR for a change to what the harness writes into a
 project or the risk policy; MINOR for a new command, playbook, target or seed
 agent; PATCH for wording and fixes. Every entry says why, not only what.
 
+## 0.3.1 — 2026-09-13
+
+- `install.sh` no longer treats a linked llm-wiki as missing. It used to
+  require a real folder, so when the owner's skills repository linked llm-wiki
+  into the tool folders, the harness installer replaced those links with its
+  bundled copy. Now only its own bundled link counts as "not installed".
+
 ## 0.3.0 — 2026-09-13
 
 The model registry checks itself.
