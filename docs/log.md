@@ -75,3 +75,11 @@ Append-only, newest at the bottom. What happened; the decisions say why.
   and this one then replaced the linked llm-wiki with its bundled copy,
   because it only counted a real folder as installed. Fixed: only our own
   bundled link counts as "not installed".
+
+## 2026-09-13 — v0.3.2, doctor says where to get what is missing
+
+- The owner asked whether someone without the graphify or obsidian-markdown
+  skill would be told to install them. They were told the folder, not the
+  source. Verified the origins (Graphify-Labs/graphify with the `graphifyy`
+  package; kepano/obsidian-skills) and taught `doctor` to print a "get it"
+  line per missing dependency, including the `npx skills add` one-liners.

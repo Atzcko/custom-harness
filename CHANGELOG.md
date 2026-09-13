@@ -4,6 +4,15 @@ Semantic versioning. MAJOR for a change to what the harness writes into a
 project or the risk policy; MINOR for a new command, playbook, target or seed
 agent; PATCH for wording and fixes. Every entry says why, not only what.
 
+## 0.3.2 — 2026-09-13
+
+- `doctor` now says where to get a missing dependency, not only that it is
+  missing: the graphify skill and CLI (Graphify-Labs/graphify, `graphifyy`
+  on PyPI), obsidian-markdown (kepano/obsidian-skills), `uv`, and Obsidian,
+  with the `npx skills add` one-liners where they apply. Origins verified on
+  2026-09-13. Why: a person without these skills was told to install them
+  into a folder but not from where.
+
 ## 0.3.1 — 2026-09-13
 
 - `install.sh` no longer treats a linked llm-wiki as missing. It used to

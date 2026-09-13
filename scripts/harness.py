@@ -57,6 +57,17 @@ CODEX_EFFORT = {0: "xhigh", 1: "high", 2: "medium", 3: "low"}
 SKILL_ROOTS = [HOME / ".agents" / "skills", HOME / ".claude" / "skills", HOME / ".codex" / "skills", HOME / ".gemini" / "skills",
                HOME / ".cursor" / "skills", HOME / ".config" / "opencode" / "skills"]
 REQUIRED_SKILLS = ("graphify", "llm-wiki", "obsidian-markdown")
+# where to get each dependency when doctor finds it missing (verified 2026-09-13)
+SKILL_SOURCES = {
+    "graphify": "https://github.com/Graphify-Labs/graphify — `npx skills add Graphify-Labs/graphify`, or copy its skill folder into ~/.agents/skills; the CLI is `uv tool install graphifyy` (or `pip install graphifyy`)",
+    "obsidian-markdown": "https://github.com/kepano/obsidian-skills — `npx skills add kepano/obsidian-skills --skill obsidian-markdown`, or copy skills/obsidian-markdown into ~/.agents/skills",
+    "llm-wiki": "bundled with the harness under bundled/llm-wiki; the installer links it when no copy is installed",
+}
+TOOL_SOURCES = {
+    "uv": "https://docs.astral.sh/uv/ — `curl -LsSf https://astral.sh/uv/install.sh | sh`",
+    "graphify binary": "`uv tool install graphifyy` (or `pip install graphifyy`); the graphify skill also installs it on first use",
+    "obsidian app": "https://obsidian.md — optional; the vault stays plain markdown without it",
+}
 
 CLAUDE_ALIASES = ("fable", "opus", "sonnet", "haiku", "inherit")
 ALIAS_RANK = {"fable": 4, "opus": 3, "sonnet": 2, "haiku": 1, "inherit": 0}
@@ -609,11 +620,11 @@ def cmd_doctor(ctx: Ctx, args) -> int:
     py = f"{platform.python_version()} at {sys.executable}"
     rows.append(("python3", "ok", py))
     uvp = shutil.which("uv")
-    rows.append(("uv", "ok" if uvp else "missing", uvp or "optional; runs the skill validator with PyYAML"))
+    rows.append(("uv", "ok" if uvp else "missing", uvp or f"optional; runs the skill validator with PyYAML. Get it: {TOOL_SOURCES['uv']}"))
     gb = shutil.which("graphify")
-    rows.append(("graphify binary", "ok" if gb else "missing", gb or "the graphify skill installs it on first use"))
+    rows.append(("graphify binary", "ok" if gb else "missing", gb or f"get it: {TOOL_SOURCES['graphify binary']}"))
     ob = obsidian_installed()
-    rows.append(("obsidian app", "ok" if ob else "missing", ob or "optional; the vault still works as plain markdown"))
+    rows.append(("obsidian app", "ok" if ob else "missing", ob or TOOL_SOURCES["obsidian app"]))
     for name in REQUIRED_SKILLS:
         found = find_skill(name, ctx.project)
         where = ", ".join(str(p).replace(str(HOME), "~") for p in found)
@@ -625,7 +636,7 @@ def cmd_doctor(ctx: Ctx, args) -> int:
         elif name == "llm-wiki" and (BUNDLED / "llm-wiki" / "SKILL.md").exists():
             rows.append((f"skill {name}", "bundled", f"not installed; using {str(BUNDLED / 'llm-wiki').replace(str(HOME), '~')}"))
         else:
-            rows.append((f"skill {name}", "missing", "install it into ~/.agents/skills or ~/.claude/skills"))
+            rows.append((f"skill {name}", "missing", f"get it: {SKILL_SOURCES.get(name, 'install it into ~/.agents/skills or ~/.claude/skills')}"))
             hard_missing.append(name)
     launcher = shutil.which("harness")
     rows.append(("harness launcher", "ok" if launcher else "missing", launcher or "run ./install.sh; prompts fall back to the python path"))
@@ -652,7 +663,8 @@ def cmd_doctor(ctx: Ctx, args) -> int:
         for a, b, c in rows:
             print(f"  {a.ljust(w)}  {b.ljust(8)} {c}")
     if hard_missing:
-        print(f"missing hard dependencies: {', '.join(hard_missing)}; the understand phase cannot run without them")
+        print(f"missing hard dependencies: {', '.join(hard_missing)}; the understand phase cannot run without them.")
+        print("Tell the user what is missing and the 'get it' line for each; do not improvise around a missing skill.")
         return 1
     return 0
 
