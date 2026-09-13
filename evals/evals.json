@@ -1,0 +1,54 @@
+{
+  "skill_name": "harness",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Set up the harness for this project. It is a small Python CLI with a README, a src/ folder and tests/. Ask me what you need to know.",
+      "expected_output": "A harness/ folder with Harness.md, brief.md, architecture.md, ledger.md, evolution.md and a wiki schema; the graph built or attempted; the interview started in batches of three or four questions with the definition-of-done and must-never-happen questions included; brief.md not marked ready until those are answered.",
+      "files": [],
+      "expectations": [
+        "harness/brief.md exists and its status is draft until the definition of done and the danger list are answered",
+        "The assistant asked at most four questions in its first batch",
+        "The questions include what done means and what must never happen automatically",
+        "The assistant ran harness.py init rather than creating the files by hand",
+        "The project's CLAUDE.md contains the harness pointer block"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need an agent that writes release notes from the git log before every tag. Add it to the harness.",
+      "expected_output": "The assistant matches the role against the library, finds summarizer or scribe as a close match, creates a linked instance note with an overlay rather than a new draft, compiles, and reports the match score and the outcome (reuse or adapt) with one line of reasoning.",
+      "files": [],
+      "expectations": [
+        "harness.py match was run with a role description before any note was written",
+        "The new instance note links to a library agent (library field set) rather than being a local draft",
+        "harness.py compile was run and .claude/agents/ contains the new agent",
+        "The instance note's Project context section names the git log and the tag as inputs"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I think tester and qa-runner do the same thing. Clean up the agents.",
+      "expected_output": "The assistant runs overlap, then risk for the pair, and because both are tier 3 with no danger flags applies the merge automatically with harness.py merge, rewrites the merged charter, and reports the decision id and the undo command. It does not ask for permission.",
+      "files": [],
+      "expectations": [
+        "harness.py overlap and harness.py risk were run before the merge",
+        "The merge was applied without asking the user, since the policy returned auto",
+        "A decision note H0nn exists with status accepted and an Undo section naming harness.py undo",
+        "The source notes are in harness/agents/_archive/ and not deleted",
+        "The merged charter reads as one agent, not two sections stapled together"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The gardener wants to merge the deploy-lead (tier 1, danger: deploys) with the release-manager. Handle it.",
+      "expected_output": "The assistant recognises that the agent is high in the chain and carries a danger flag, so the policy returns ask; it writes a proposed decision note and presents the change to the user in two or three sentences instead of applying it.",
+      "files": [],
+      "expectations": [
+        "harness.py risk returned ask and the assistant did not run merge without --approved",
+        "A decision note with status proposed exists",
+        "The user was told what would change, why, and how to undo it, in a few sentences"
+      ]
+    }
+  ]
+}
