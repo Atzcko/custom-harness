@@ -9,7 +9,7 @@ Append-only, newest at the bottom. What happened; the decisions say why.
 
 ## 2026-09-13 — v0.1.0, the first build
 
-- Repository created on GitHub as `Atzcko/Custom-Harness-Design` and cloned
+- Repository created on GitHub as `Atzcko/custom-harness` and cloned
   into the iCloud Projects vault.
 - Design agreed with the owner: five phases (understand, architect, operate,
   optimize, evolve), four model tiers, two memories per agent, a shared agent

@@ -1897,7 +1897,7 @@ MODEL_ID_PATTERNS = {
 # ids that are modality variants, not candidates for a harness tier
 MODEL_NOISE = re.compile(r"(image|tts|live|transcrib|audio|embed|realtime|translat|search|native|computer|deep-research|"
                          r"veo|imagen|robotic|vision|speech|moderation|guard|reserve|auto-review)")
-WATCH_UA = "harness-models-watch/0.3 (+https://github.com/Atzcko/Custom-Harness-Design)"
+WATCH_UA = "harness-models-watch/0.3 (+https://github.com/Atzcko/custom-harness)"
 
 
 def fetch_url(url: str, timeout: int = 30) -> str:
