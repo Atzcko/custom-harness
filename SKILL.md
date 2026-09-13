@@ -39,10 +39,13 @@ to get it rather than improvising around it.
 harness models check
 ```
 
-If the registry is stale, refresh it before compiling anything: the brief for
-the researcher is in [references/models.md](references/models.md). Newer
-models reach every agent through the registry, so a stale registry is a
-roster running on yesterday's models.
+If the registry is stale, run `harness models watch --write` first: it reads
+the official model pages itself and advances the date when nothing changed.
+Only when it reports new ids do you spend a researcher on the mapping; the
+brief is in [references/models.md](references/models.md). A weekly job in the
+skill's repository does the same check unattended, so most sessions find the
+registry already fresh. Newer models reach every agent through the registry,
+so a stale registry is a roster running on yesterday's models.
 
 ## 1. Find out where you are
 
@@ -126,7 +129,7 @@ current directory) and `--target claude|codex|gemini|cursor|opencode|all|auto`
 | `retire <name> --why "..."` | archive an agent with a decision note |
 | `promote <name>` | copy a proven project draft into the library |
 | `undo <H-id>` | reverse a merge, split or retirement from its archive |
-| `models show\|check\|set\|touch` | read, verify, update and date the tier-to-model registry |
+| `models show\|check\|set\|touch\|watch` | read, verify, update and date the tier-to-model registry; `watch` reads the provider pages and reports new ids |
 | `lessons collect` | move new lines from `harness/evolution.md` into the library's `LESSONS.md` |
 | `index` | regenerate `library/INDEX.md` |
 | `lint` | frontmatter, links, index, registry age and stale-compile checks |

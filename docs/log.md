@@ -52,3 +52,18 @@ Append-only, newest at the bottom. What happened; the decisions say why.
 - Decisions D007 to D010; D003 superseded by D009 for the memory location.
 - Doctor found that the two installed llm-wiki copies (`~/.agents/skills`
   and `~/.claude/skills`) differ; the bundled copy follows the newer one.
+
+## 2026-09-13 — v0.3.0, the registry checks itself
+
+- The owner asked for the model check to run periodically and update the
+  files, and for the work to arrive as a pull request.
+- Probed the official model pages: the Anthropic and OpenAI docs serve a
+  markdown twin at `.md`, Google's page carries the ids in its HTML. All
+  three are readable by a plain script, so `harness models watch` needs no
+  dependencies.
+- Added `models watch`, the snapshot `library/models-seen.json`, and the
+  weekly workflow; decision D011 separates the fact (pages unchanged) from
+  the judgment (tier mapping), which is why unchanged pages commit and new
+  ids open a pull request.
+- Pushed `main` at v0.1.0 as the base and opened a pull request carrying
+  v0.2.0 and v0.3.0.

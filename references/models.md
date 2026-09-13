@@ -48,8 +48,18 @@ At session start the conductor runs:
 harness models check
 ```
 
-If it reports the registry as stale, delegate to the **researcher** with this
-brief and nothing more:
+If it reports the registry as stale, first let the script look at the pages
+itself:
+
+```bash
+harness models watch --write
+```
+
+It fetches the official model pages, compares the model ids with the last
+snapshot in `library/models-seen.json`, and prints a report. Unchanged pages
+advance the registry's `checked` date on the spot and you are done. New ids
+that could change a tier leave the date alone and list what appeared; that is
+when you delegate to the **researcher** with this brief and nothing more:
 
 > Read the official model pages for Anthropic, OpenAI and Google (the URLs
 > are in `library/models.json`). For each provider, list the current model
@@ -65,6 +75,18 @@ model column can be read against it later.
 Local evidence beats the web when a tool ships a model list: Codex keeps
 `~/.codex/models_cache.json`, and Claude Code's `/model` picker shows what the
 session can use. `harness models show --local` prints what it can find.
+
+## The weekly job
+
+`.github/workflows/models-watch.yml` runs `harness models watch --write` every
+Monday in the skill's repository. Unchanged pages become a small commit that
+advances the `checked` date. New ids become a pull request whose body is the
+report; while it is open, later runs add their report as a comment on it
+instead of opening another. Record the tier decisions with `models set` on
+that branch and merge it, or merge it as it is if nothing needs to move; the
+snapshot in it is what stops the same ids being reported again. An
+unreachable page fails the job so it shows up, and assumes nothing. The
+reasoning is in decision D011.
 
 ## Tiers, restated
 

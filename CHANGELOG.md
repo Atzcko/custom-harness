@@ -4,6 +4,26 @@ Semantic versioning. MAJOR for a change to what the harness writes into a
 project or the risk policy; MINOR for a new command, playbook, target or seed
 agent; PATCH for wording and fixes. Every entry says why, not only what.
 
+## 0.3.0 — 2026-09-13
+
+The model registry checks itself.
+
+- **`harness models watch`** fetches the official Anthropic, OpenAI and Google
+  model pages, extracts the model ids, and compares them with
+  `library/models-seen.json`. With `--write`, unchanged pages advance the
+  registry's `checked` date; new ids that could change a tier are reported and
+  leave the date alone; modality variants (image, audio, live, embeddings) are
+  recorded without fuss. Exit codes: 0 unchanged, 3 new ids or a registry id
+  missing from its page, 2 a page unreachable.
+- **A weekly GitHub Actions workflow** (`.github/workflows/models-watch.yml`)
+  runs it every Monday: unchanged pages become a small commit on `main`, new
+  ids become a pull request carrying the report, an unreachable page fails
+  the job (D011). Why: the owner asked for the check to happen periodically
+  and the files to be updated without waiting for a session; the part that
+  is a fact is automated, the part that is a judgment gets a pull request.
+- Session start now runs `models watch` before spending a researcher on a
+  refresh.
+
 ## 0.2.0 — 2026-09-13
 
 Tool-neutral core, a model registry, preflight, and llm-wiki bundled.

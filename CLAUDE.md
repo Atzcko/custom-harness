@@ -72,7 +72,8 @@ Gemini CLI, Cursor and OpenCode; see `references/targets.md`. Start at
 | `SKILL.md` | entry point and phase router |
 | `references/` | playbooks: orchestrator, understand, architect, operate, optimize, evolve, interview, model-tiers, models, memory-protocol, library, targets |
 | `templates/` | agent, instance, brief, architecture, decision, ledger, evolution, harness-index, wiki-schema |
-| `library/` | `agents/`, `memory/`, `archive/`, `decisions/` (L-numbered), `models.json`, `INDEX.md`, `LESSONS.md` |
+| `library/` | `agents/`, `memory/`, `archive/`, `decisions/` (L-numbered), `models.json`, `models-seen.json` (snapshot kept by `models watch`), `INDEX.md`, `LESSONS.md` |
+| `.github/workflows/models-watch.yml` | the weekly model-page check; unchanged pages commit a date bump, new ids open a pull request |
 | `bundled/llm-wiki/` | the llm-wiki skill, fallback when not installed |
 | `scripts/harness.py` | the CLI, reachable as `harness` after install |
 | `evals/evals.json` | test prompts for skill-creator |

@@ -12,11 +12,12 @@ harness models check
 harness status
 ```
 
-If `models check` says the registry is stale, refresh it before delegating
-anything that matters: send the **researcher** the brief in
+If `models check` says the registry is stale, run `harness models watch
+--write`. When the pages are unchanged it advances the date and you move on.
+When it reports new ids, send the **researcher** the brief in
 [models.md](models.md), apply its findings with `harness models set`, then
-`harness models touch` and `harness compile`. A stale registry means every
-agent is running on whatever was newest a month ago.
+`harness compile`. A stale registry means every agent is running on whatever
+was newest a month ago.
 
 `status` shows drift too: agents whose library charter has a newer version
 than the one they were compiled from. Recompile at the next quiet moment.

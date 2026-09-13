@@ -1881,6 +1881,174 @@ def cmd_promote(ctx: Ctx, args) -> int:
 # models
 # ----------------------------------------------------------------------------
 
+MODELS_SEEN_FILE = LIB_DIR / "models-seen.json"
+MODEL_PAGES = {
+    "anthropic": ["https://platform.claude.com/docs/en/about-claude/models/overview.md",
+                  "https://platform.claude.com/docs/en/about-claude/models/overview"],
+    "openai": ["https://developers.openai.com/api/docs/models.md",
+               "https://developers.openai.com/api/docs/models"],
+    "google": ["https://ai.google.dev/gemini-api/docs/models"],
+}
+MODEL_ID_PATTERNS = {
+    "anthropic": r"claude-(?:fable|opus|sonnet|haiku|mythos)-\d[a-z0-9.\-]*",
+    "openai": r"(?:gpt-\d[a-z0-9.\-]*|codex-[a-z0-9.\-]*)",
+    "google": r"gemini-\d[a-z0-9.\-]*",
+}
+# ids that are modality variants, not candidates for a harness tier
+MODEL_NOISE = re.compile(r"(image|tts|live|transcrib|audio|embed|realtime|translat|search|native|computer|deep-research|"
+                         r"veo|imagen|robotic|vision|speech|moderation|guard|reserve|auto-review)")
+WATCH_UA = "harness-models-watch/0.3 (+https://github.com/Atzcko/Custom-Harness-Design)"
+
+
+def fetch_url(url: str, timeout: int = 30) -> str:
+    import urllib.request
+    req = urllib.request.Request(url, headers={"User-Agent": WATCH_UA, "Accept": "text/markdown, text/html;q=0.9, */*;q=0.5"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read().decode("utf-8", errors="ignore")
+
+
+def extract_ids(provider: str, text: str) -> set[str]:
+    out = set()
+    for raw in re.findall(MODEL_ID_PATTERNS[provider], text.lower()):
+        s = raw
+        for _ in range(2):
+            s = re.sub(r"\.md$", "", s).rstrip(".,;:)-")
+        if len(s) < 6 or s.endswith("-") or "--" in s:
+            continue
+        out.add(s)
+    return out
+
+
+def watch_pages(timeout: int) -> dict:
+    """Fetch every provider's model page and return {provider: {source, reachable, ids}}."""
+    result = {}
+    for prov, urls in MODEL_PAGES.items():
+        entry = {"source": "", "reachable": False, "ids": set(), "error": ""}
+        for u in urls:
+            try:
+                text = fetch_url(u, timeout)
+            except Exception as e:  # network, 4xx, 5xx
+                entry["error"] = f"{type(e).__name__}: {e}"[:120]
+                continue
+            ids = extract_ids(prov, text)
+            if ids:
+                entry.update({"source": u, "reachable": True, "ids": ids, "error": ""})
+                break
+            entry["error"] = f"no model ids found at {u}"
+        result[prov] = entry
+    return result
+
+
+def load_seen() -> dict:
+    if MODELS_SEEN_FILE.exists():
+        try:
+            return json.loads(MODELS_SEEN_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"updated": "", "providers": {}}
+
+
+def cmd_models_watch(ctx: Ctx, args) -> int:
+    reg = load_models()
+    seen = load_seen()
+    first = not MODELS_SEEN_FILE.exists()
+    pages = watch_pages(args.timeout)
+    lines = [f"# Models watch — {today()}", "", "| provider | source | reachable | ids on page | new | gone |", "|---|---|---|---|---|---|"]
+    new_relevant: dict[str, list[str]] = {}
+    new_noise: dict[str, list[str]] = {}
+    gone: dict[str, list[str]] = {}
+    unreachable = []
+    for prov, entry in pages.items():
+        prev = seen.get("providers", {}).get(prov, {})
+        prev_ids = set(prev.get("ids", []))
+        if not entry["reachable"]:
+            unreachable.append(prov)
+            lines.append(f"| {prov} | - | no ({entry['error']}) | - | - | - |")
+            continue
+        ids = entry["ids"]
+        added = sorted(ids - prev_ids) if not first else []
+        removed = sorted(prev_ids - ids)
+        for i in added:
+            (new_noise if MODEL_NOISE.search(i) else new_relevant).setdefault(prov, []).append(i)
+        if removed:
+            gone[prov] = removed
+        lines.append(f"| {prov} | {entry['source']} | yes | {len(ids)} | {len(added)} | {len(removed)} |")
+    lines.append("")
+    if first:
+        lines.append(f"First run: snapshot seeded with {sum(len(e['ids']) for e in pages.values() if e['reachable'])} ids; nothing to compare yet.")
+    if new_relevant:
+        lines.append("## New model ids that could change a tier")
+        lines.append("")
+        for prov, ids in new_relevant.items():
+            for i in ids:
+                lines.append(f"- {prov}: `{i}`")
+        lines.append("")
+        lines.append("Decide the tier mapping per `references/models.md`, then record it with "
+                     "`harness models set --provider <p> --tier <n> --model <id> --source <url>` and recompile every project. "
+                     "The registry's `checked` date was not advanced by this run.")
+        lines.append("")
+    if new_noise:
+        lines.append("## New ids that look like modality variants (no tier decision needed)")
+        lines.append("")
+        for prov, ids in new_noise.items():
+            lines.append(f"- {prov}: " + ", ".join(f"`{i}`" for i in ids))
+        lines.append("")
+    if gone:
+        lines.append("## Ids no longer on the page")
+        lines.append("")
+        for prov, ids in gone.items():
+            lines.append(f"- {prov}: " + ", ".join(f"`{i}`" for i in ids))
+        lines.append("")
+    lines.append("## Registry ids still listed")
+    lines.append("")
+    registry_missing = []
+    for prov, entry in (reg.get("providers") or {}).items():
+        page = pages.get(prov)
+        if not page or not page["reachable"]:
+            continue
+        for tier, mid in (entry.get("tiers") or {}).items():
+            mid_s = str(mid)
+            ok = any(mid_s == i or i.startswith(mid_s) for i in page["ids"])
+            lines.append(f"- {prov} tier {tier} `{mid_s}`: {'listed' if ok else 'NOT FOUND on the page'}")
+            if not ok:
+                registry_missing.append(f"{prov} tier {tier} {mid_s}")
+    lines.append("")
+    if unreachable:
+        lines.append(f"Unreachable: {', '.join(unreachable)}. Nothing was assumed about them.")
+        lines.append("")
+    report = "\n".join(lines).rstrip() + "\n"
+    if args.write:
+        provs = seen.setdefault("providers", {})
+        for prov, entry in pages.items():
+            if not entry["reachable"]:
+                continue
+            p = provs.setdefault(prov, {"ids": [], "first_seen": {}})
+            fs = p.setdefault("first_seen", {})
+            for i in entry["ids"]:
+                fs.setdefault(i, today())
+            p["ids"] = sorted(entry["ids"])
+            p["source"] = entry["source"]
+            p["last_checked"] = today()
+        seen["updated"] = today()
+        MODELS_SEEN_FILE.parent.mkdir(parents=True, exist_ok=True)
+        MODELS_SEEN_FILE.write_text(json.dumps(seen, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        touched = False
+        if not unreachable and not new_relevant and not registry_missing:
+            if reg.get("checked") != today():
+                reg["checked"] = today()
+                save_models(reg)
+            touched = True
+        report += f"\nSnapshot written to library/models-seen.json; registry {'checked date advanced to ' + today() if touched else 'left as is'}.\n"
+    if args.report:
+        Path(args.report).write_text(report, encoding="utf-8")
+    print(report, end="")
+    if new_relevant or registry_missing:
+        return 3
+    if unreachable:
+        return 2
+    return 0
+
+
 def local_model_evidence() -> list[str]:
     out = []
     cache = HOME / ".codex" / "models_cache.json"
@@ -1949,7 +2117,9 @@ def cmd_models(ctx: Ctx, args) -> int:
         save_models(reg)
         print(f"models: registry marked checked on {today()}")
         return 0
-    print("usage: models show|check|set|touch", file=sys.stderr)
+    if sub == "watch":
+        return cmd_models_watch(ctx, args)
+    print("usage: models show|check|set|touch|watch", file=sys.stderr)
     return 1
 
 
@@ -2206,14 +2376,17 @@ def main(argv=None) -> int:
     s.add_argument("--as", dest="as_name", help="library name if different")
     s.add_argument("--force", action="store_true", help="promote without the track record")
 
-    s = sub.add_parser("models", help="models show|check|set|touch")
-    s.add_argument("models_cmd", choices=["show", "check", "set", "touch"])
+    s = sub.add_parser("models", help="models show|check|set|touch|watch")
+    s.add_argument("models_cmd", choices=["show", "check", "set", "touch", "watch"])
     s.add_argument("--provider", help="anthropic, openai, google, ...")
     s.add_argument("--tier", type=int)
     s.add_argument("--model")
     s.add_argument("--source", help="URL of the page that says so")
     s.add_argument("--note")
     s.add_argument("--local", action="store_true", help="show local evidence such as the Codex model cache")
+    s.add_argument("--write", action="store_true", help="watch: update library/models-seen.json and, if nothing changed, the registry's checked date")
+    s.add_argument("--report", help="watch: also write the markdown report to this path")
+    s.add_argument("--timeout", type=int, default=30, help="watch: seconds per page fetch")
 
     s = sub.add_parser("lessons", help="lessons collect")
     s.add_argument("lessons_cmd", choices=["collect"])

@@ -6,32 +6,58 @@
     "codex": "openai",
     "gemini": "google",
     "cursor": "anthropic",
-    "opencode": {"provider": "anthropic", "prefix": "anthropic/"},
+    "opencode": {
+      "provider": "anthropic",
+      "prefix": "anthropic/"
+    },
     "generic": "anthropic"
   },
   "providers": {
     "claude-code": {
       "source": "https://code.claude.com/docs/en/sub-agents",
-      "tiers": {"0": "fable", "1": "opus", "2": "sonnet", "3": "haiku"},
+      "tiers": {
+        "0": "fable",
+        "1": "opus",
+        "2": "sonnet",
+        "3": "haiku"
+      },
       "notes": "Claude Code's own shorthands for the `model` field; each resolves to the newest model of its class, so this row upgrades itself."
     },
     "anthropic": {
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "tiers": {"0": "claude-fable-5-1", "1": "claude-opus-5", "2": "claude-sonnet-5", "3": "claude-haiku-4-5"},
+      "tiers": {
+        "0": "claude-fable-5-1",
+        "1": "claude-opus-5",
+        "2": "claude-sonnet-5",
+        "3": "claude-haiku-4-5"
+      },
       "notes": "Dateless ids are pinned snapshots (no -latest). Fable 5.1 released 2026-09-01, Opus 5 2026-07-24, Sonnet 5 2026-06-30, Haiku 4.5 2025-10-01. Anthropic's guidance: start with Opus 5 and escalate to Fable 5.1 only when it falls short."
     },
     "openai": {
       "source": "https://developers.openai.com/api/docs/models",
-      "tiers": {"0": "gpt-6-astra", "1": "gpt-5.6-sol", "2": "gpt-5.6-terra", "3": "gpt-5.6-luna"},
+      "tiers": {
+        "0": "gpt-6-astra",
+        "1": "gpt-5.6-sol",
+        "2": "gpt-5.6-terra",
+        "3": "gpt-5.6-luna"
+      },
       "notes": "GPT-6 Astra released 2026-09-03; the 5.6 family 2026-07-09. `gpt-5.6` is an alias for Sol. Terra corresponds to the mini tier, Luna to nano. Confirmed against ~/.codex/models_cache.json on 2026-09-13."
     },
     "google": {
       "source": "https://ai.google.dev/gemini-api/docs/models",
-      "tiers": {"0": "gemini-3.8-flash", "1": "gemini-3.1-pro-preview", "2": "gemini-3.7-flash", "3": "gemini-3.1-flash-lite"},
+      "tiers": {
+        "0": "gemini-3.8-flash",
+        "1": "gemini-3.1-pro-preview",
+        "2": "gemini-3.7-flash",
+        "3": "gemini-3.1-flash-lite"
+      },
       "notes": "Gemini 3.8 Flash (GA 2026-09-02) is the newest and most capable documented model; the only 3.x Pro is the 3.1 preview from 2026-02-19. `-latest` aliases exist (e.g. gemini-flash-latest) and hot-swap on release. Gemini CLI's pro/flash aliases were stale in the docs on 2026-09-13; pin ids."
     }
   },
   "history": [
-    {"date": "2026-09-13", "note": "first registry, verified against the three official model pages and the local Codex model cache"}
+    {
+      "date": "2026-09-13",
+      "note": "first registry, verified against the three official model pages and the local Codex model cache"
+    }
   ]
 }

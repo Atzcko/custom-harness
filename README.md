@@ -64,7 +64,7 @@ Read [SKILL.md](SKILL.md) for the full picture and the command table.
 
 | Question | Answer |
 |---|---|
-| Which model runs an agent? | Agents declare a tier; `library/models.json` maps tiers to the current model per provider and per tool, dated and sourced. `harness models check` says when it is stale. See [references/models.md](references/models.md). |
+| Which model runs an agent? | Agents declare a tier; `library/models.json` maps tiers to the current model per provider and per tool, dated and sourced. A weekly GitHub Actions job reads the official model pages: unchanged pages refresh the registry's date, new models open a pull request for the tier decision. See [references/models.md](references/models.md). |
 | Where does an agent's memory live? | Portable lessons in `library/memory/<agent>/`, which follows the agent across projects and tools; project facts in the instance note in the vault. See [references/memory-protocol.md](references/memory-protocol.md). |
 | Reuse or create? | Every role is matched against the library: strong match reuse, close match adapt with an overlay, no match create a draft. See [references/library.md](references/library.md). |
 | Who approves a merge? | Nobody, unless the agent is tier 0 or 1 **and** carries a danger signal. Then you. Every automatic change is archived, recorded as a decision, and reversible with `undo`. See [references/optimize.md](references/optimize.md). |
