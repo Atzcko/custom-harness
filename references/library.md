@@ -15,7 +15,8 @@ script reads; the body is the charter the compiled agent carries.
 | `name` | the identifier; lowercase, hyphens; also the compiled agent's name |
 | `title` | the human name |
 | `version` | bumped on every charter change; projects recompile on drift |
-| `tier`, `model` | altitude and default model alias |
+| `tier` | altitude, 0 to 3; the registry in `models.json` turns it into a model per tool |
+| `model` | optional pin; empty means the registry decides |
 | `description` | written for matching and for delegation; says what the agent does and when to use it |
 | `tags` | the matching vocabulary; five to eight, specific |
 | `skills` | skills preloaded into the agent at start |
@@ -52,6 +53,12 @@ with four in five successful, or when the user says so. `promote` does the
 mechanics; the gardener or conductor then reads the charter and removes what
 only made sense in the birth project. Promoted agents start as `proven` if
 they met the numbers, `draft` otherwise.
+
+## Memory
+
+`library/memory/<agent>/MEMORY.md` is the agent's portable memory, created on
+first compile and carried across projects and tools. See
+[memory-protocol.md](memory-protocol.md).
 
 ## Archive
 

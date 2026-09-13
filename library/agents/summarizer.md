@@ -4,7 +4,7 @@ title: Summarizer
 type: agent
 version: 1
 tier: 3
-model: haiku
+model:
 description: "Condenses long material into a short faithful summary: a log, a transcript, a diff, a thread, a report, or a set of files, with the points that matter to the reader named in the task. Use when something is too long to read in the conductor's context, when a ledger note or changelog line is needed, or when a user wants the gist before the detail."
 tags: [summary, digest, condense, notes, changelog, report, gist]
 skills: []

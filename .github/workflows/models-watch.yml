@@ -1,0 +1,95 @@
+name: models watch
+
+# Every Monday, read the official model pages of Anthropic, OpenAI and Google.
+# Unchanged pages: the registry's checked date moves forward with a small
+# commit, so `harness models check` stays green without anyone doing anything.
+# New model ids: a pull request with the report, because which tier a new
+# model belongs to is a judgment call for the owner or the researcher agent.
+# Unreachable page: the job fails so it is visible; nothing is assumed.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: models-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Read the model pages
+        id: watch
+        run: |
+          set +e
+          python3 scripts/harness.py models watch --write --report "$RUNNER_TEMP/report.md"
+          code=$?
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/report.md" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Record an unchanged check
+        if: steps.watch.outputs.code == '0'
+        run: |
+          git config user.name "harness models watch"
+          git config user.email "actions@users.noreply.github.com"
+          git add library/models.json library/models-seen.json
+          if git diff --cached --quiet; then
+            echo "nothing to record"
+            exit 0
+          fi
+          git commit -m "models watch: pages verified unchanged on $(date -u +%F) [skip ci]"
+          git push
+
+      - name: Open or update the pull request for new models
+        if: steps.watch.outputs.code == '3'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          d=$(date -u +%F)
+          git config user.name "harness models watch"
+          git config user.email "actions@users.noreply.github.com"
+          cp library/models-seen.json "$RUNNER_TEMP/models-seen.json"
+          existing=$(gh pr list --state open --search 'in:title "New models on the provider pages"' --json headRefName --jq '.[0].headRefName // empty')
+          if [ -n "$existing" ]; then
+            number=$(gh pr list --state open --search 'in:title "New models on the provider pages"' --json number --jq '.[0].number')
+            echo "updating open pull request #$number on $existing"
+            git fetch origin "$existing"
+            git checkout -f -B "$existing" "origin/$existing"
+            cp "$RUNNER_TEMP/models-seen.json" library/models-seen.json
+            git add library/models-seen.json
+            if ! git diff --cached --quiet; then
+              git commit -m "models watch: more ids seen on $d"
+              git push origin "$existing"
+            fi
+            gh pr comment "$number" --body-file "$RUNNER_TEMP/report.md"
+          else
+            branch="models-watch/$d-$GITHUB_RUN_ID"
+            git checkout -b "$branch"
+            git add library/models-seen.json
+            git commit -m "models watch: new model ids seen on $d"
+            git push -u origin "$branch"
+            gh pr create \
+              --title "New models on the provider pages ($d)" \
+              --body-file "$RUNNER_TEMP/report.md" \
+              --base "${GITHUB_REF_NAME:-main}" \
+              --head "$branch"
+          fi
+
+      - name: Fail when a page was unreachable
+        if: steps.watch.outputs.code == '2'
+        run: |
+          echo "one or more model pages were unreachable; see the summary"
+          exit 1

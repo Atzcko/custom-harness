@@ -1,17 +1,21 @@
 # Memory protocol
 
-Every agent has two memories. Both are markdown. The rule about what goes
-where is the one rule that must not drift, because it is what keeps one
-project's facts out of another project's context.
+Every agent has two memories. Both are markdown, both live in git. The rule
+about what goes where is the one rule that must not drift, because it is what
+keeps one project's facts out of another project's context.
 
 ## The two memories
 
-**Portable memory** is the agent's own directory, provided by Claude Code's
-`memory:` field in the compiled definition. Library-linked agents use the
-`user` scope, so the directory lives under `~/.claude/agent-memory/<name>/`
-and follows the agent into every project. Its `MEMORY.md` is loaded into the
-agent's prompt automatically. Local drafts use the `project` scope until they
-are promoted, so their memory stays in the project.
+**Portable memory** is `library/memory/<agent>/MEMORY.md` in the skill
+repository. It follows the agent into every project and every tool, because
+it is just a file next to the charter. Every compiled prompt names its
+absolute path and says: read it first, append at the end.
+
+In Claude Code the compiled definition also declares `memory: user`, and
+`compile` links `~/.claude/agent-memory/<agent>` to the library directory, so
+Claude Code loads the same `MEMORY.md` into the agent's prompt automatically
+and its own memory instructions write to the same file. Other tools get no
+automatic loading; the prompt's first step covers it.
 
 **Project memory** is the "Project memory" section of the instance note,
 `harness/agents/<name>.md`. It is read by the agent at the start of every task
@@ -36,8 +40,9 @@ Secrets never go in either. If an agent learns a credential, it forgets it.
 ## The reading order
 
 1. The compiled prompt, which carries the charter and the project context.
-2. `MEMORY.md` from the portable directory, loaded automatically.
-3. The instance note, read with the Read tool as the first action.
+2. The instance note, read as the first action.
+3. `MEMORY.md` from the portable directory, loaded automatically in Claude
+   Code and read explicitly elsewhere.
 4. The task prompt from the conductor.
 
 Later items are more specific and win conflicts.
@@ -46,13 +51,16 @@ Later items are more specific and win conflicts.
 
 - Append; do not rewrite history. A lesson that turned out wrong gets a new
   line saying so, dated.
-- Keep `MEMORY.md` under the size the runtime loads (about two hundred lines);
-  when it grows, move detail into topic files in the same directory and keep
-  the index short. The runtime tells the agent when it must.
-- Date every project-memory line. Absolute dates only.
+- Keep `MEMORY.md` under about two hundred lines; when it grows, move detail
+  into topic files in the same directory and keep the index short. Claude Code
+  tells the agent when it must; elsewhere the agent has to notice.
+- Date every line. Absolute dates only.
 
-## Promotion and merges
+## Promotion, merges, renames
 
-Promotion copies the charter, not the project memory. The gardener carries
-project-memory sections over during a merge and never edits them; they are
-history and belong to the project.
+Promotion copies the charter, not the project memory. When a draft is promoted
+under a new name, its memory directory is renamed with it. The gardener
+carries project-memory sections over during a merge and never edits them;
+they are history and belong to the project. A merged agent starts with an
+empty portable memory; its sources' memories stay in place under their old
+names for a reader who needs them.

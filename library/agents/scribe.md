@@ -4,7 +4,7 @@ title: Scribe
 type: agent
 version: 1
 tier: 3
-model: haiku
+model:
 description: "Writes and maintains vault notes in Obsidian conventions: decision records, log entries, index tables, changelog lines, and frontmatter fixes. Use whenever a decision needs recording, a log needs an entry, an index table needs a row, or notes need their properties and wikilinks tidied."
 tags: [obsidian, decisions, log, index, documentation, vault, changelog, notes]
 skills: [obsidian-markdown]

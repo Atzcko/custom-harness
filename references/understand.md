@@ -6,19 +6,33 @@ documents say, and an interview with the user. Nothing gets designed until the
 brief is ready, because a roster designed from a guess is a roster you will
 tear down next week.
 
+## 0. Preflight
+
+```bash
+harness doctor
+```
+
+The graph needs the graphify skill, the wiki needs llm-wiki (the bundled copy
+under the skill's `bundled/llm-wiki/` is used when none is installed), and the
+notes follow the obsidian-markdown skill. If `doctor` reports a hard
+dependency missing, stop here and tell the user what to install and where;
+a half-built understanding is worse than none.
+
 ## 1. Skeleton
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" init
+harness init
 ```
 
-Creates `harness/` from the templates, adds a short pointer to the project's
-`CLAUDE.md` so future sessions know the harness exists, and does nothing to
-files that already exist. Open `harness/Harness.md`; it is the entry note.
+Creates `harness/` from the templates and adds a short pointer to the
+instruction file of every tool it detects (`CLAUDE.md`, `AGENTS.md`,
+`GEMINI.md`), so future sessions in any of them know the harness exists. It
+does nothing to files that already exist. Open `harness/Harness.md`; it is the
+entry note.
 
 ## 2. The graph
 
-Use the `graphify` skill on the project root. If `graphify-out/graph.json`
+Use the graphify skill on the project root. If `graphify-out/graph.json`
 already exists, run it with `--update`. Delegate this to the **librarian**
 agent in the background if the compiled roster exists; before the first
 compile, run it yourself.
@@ -30,14 +44,18 @@ everything depends on. Both go into the brief under "Domains".
 ## 3. The wiki
 
 The harness keeps an llm-wiki at `harness/wiki/`. `init` wrote its schema
-(`harness/wiki/CLAUDE.md`) from the template; read it, then follow the
-`llm-wiki` skill. The project's own files are the sources and are never
-copied; external material the user hands over goes in `harness/wiki/raw/`.
+(`harness/wiki/SCHEMA.md`, with a pointer stub named for each tool's
+instruction file next to it) from the template; read it, then follow the
+llm-wiki skill. If the skill is not installed, read `bundled/llm-wiki/SKILL.md`
+in the skill directory and its `references/`; it is the same skill. The
+project's own files are the sources and are never copied; external material
+the user hands over goes in `harness/wiki/raw/`.
 
 First ingest, in this order: the graph report, the project's `README` and
-`CLAUDE.md` if present, and any decision records or design docs the project
-keeps. Stop after the first ingest. The librarian keeps the wiki current later;
-the point now is to have a page per domain that the architect can read.
+instruction file if present, and any decision records or design docs the
+project keeps. Stop after the first ingest. The librarian keeps the wiki
+current later; the point now is to have a page per domain that the architect
+can read.
 
 ## 4. The interview
 

@@ -4,7 +4,7 @@ title: Editor
 type: agent
 version: 1
 tier: 3
-model: haiku
+model:
 description: "Performs mechanical edits across files: formatting, renames, moves, find-and-replace with a checked match count, frontmatter fixes, and applying a fixed pattern to many places. Use when a change is fully specified and needs no judgment, when the same edit repeats across files, or when a specialist wants tidy-up done while it keeps working."
 tags: [formatting, rename, move, replace, cleanup, mechanical, bulk-edit]
 skills: []

@@ -4,7 +4,7 @@ title: Tester
 type: agent
 version: 1
 tier: 3
-model: haiku
+model:
 description: Runs the project's tests, builds, linters or checks exactly as instructed and reports the result with the relevant output, without changing anything. Use whenever a change needs verification, when a build or test run would flood the conductor's context, or when a specialist needs a check run while it keeps working.
 tags: [tests, verification, build, lint, ci, checks, run]
 skills: []

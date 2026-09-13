@@ -30,7 +30,7 @@ with an overlay.
 ## 2. Match each role against the library
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" match "reviews firmware changes for memory safety and LVGL misuse" --tags review,firmware
+harness match "reviews firmware changes for memory safety and LVGL misuse" --tags review,firmware
 ```
 
 The score is a heuristic; you make the call. The bands:
@@ -47,11 +47,14 @@ the point: the agent already has memory.
 Create instance notes with the script so the frontmatter is right:
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" new firmware-reviewer --title "Firmware reviewer" --tier 1 --model opus --library reviewer --tags review,firmware
+harness new firmware-reviewer --title "Firmware reviewer" --tier 1 --library reviewer --tags review,firmware
 ```
 
 Then fill the "Project context" section by hand. For a create, also write the
-charter under "Charter" in the same note.
+charter under "Charter" in the same note. The tier is what you choose; the
+model comes from the registry for whichever tool compiles the agent. Pin a
+model with `--model` only when this project genuinely needs one specific
+model for this role, and say why in the note.
 
 ## 3. Danger flags and spawn lists
 
@@ -74,8 +77,8 @@ instance notes.
 ## 5. Compile, lint, record
 
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" compile
-python3 "${CLAUDE_SKILL_DIR}/scripts/harness.py" lint
+harness compile
+harness lint
 ```
 
 Write the first decision note, `H001 - Initial roster`, with the template.

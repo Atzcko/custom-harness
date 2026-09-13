@@ -1,20 +1,23 @@
 # Harness
 
-A Claude Code skill that turns any project into a staffed team of agents.
+A skill that turns any project into a staffed team of agents, for Claude
+Code, OpenAI Codex, Gemini CLI, Cursor and OpenCode.
 
 Invoked inside a project, it learns the project first: a knowledge graph
-(graphify), a compiled wiki (llm-wiki), and an interview with you. Then it
-designs the agents the project needs and writes each one as a markdown note in
-the project's Obsidian vault, where the note is both the agent's charter and
-its memory. Work flows down a hierarchy with the newest model only at the
-top and cheaper models doing the boiled-down tasks. A gardener runs alongside,
-merging overlapping agents into stronger specialists. Agents that prove
-themselves are promoted to a shared library and reused in the next project.
-And the skill studies its own performance so it gets better with every
-session.
+(graphify), a compiled wiki (llm-wiki, bundled), and an interview with you.
+Then it designs the agents the project needs and writes each one as a markdown
+note in the project's Obsidian vault, where the note is both the agent's
+charter and its memory. Work flows down a hierarchy with the newest model only
+at the top and cheaper models doing the boiled-down tasks; which model that is
+comes from a dated registry, so a new release reaches every agent with one
+change. A gardener runs alongside, merging overlapping agents into stronger
+specialists. Agents that prove themselves are promoted to a shared library and
+reused in the next project, in whichever tool you open it with. And the skill
+studies its own performance so it gets better with every session.
 
 This repository is the skill's home: the skill, its playbooks, the agent
-library, and the skill's own decision records.
+library with its memories and model registry, and the skill's own decision
+records.
 
 ## Install
 
@@ -22,28 +25,35 @@ library, and the skill's own decision records.
 ./install.sh
 ```
 
-It symlinks this folder to `~/.claude/skills/harness` and lints the library.
-Then start a new Claude Code session in any project and type `/harness`.
+It links this folder into `~/.agents/skills/harness`, which every supported
+tool reads, plus each tool's own skills folder that exists on the machine;
+links the bundled llm-wiki in the same way when none is installed; writes a
+`harness` launcher to `~/.local/bin`; and runs `harness doctor`.
 
-Requirements: Claude Code with custom agents and skills, Python 3, and the
-`graphify`, `llm-wiki` and `obsidian-markdown` skills for the understand
-phase.
+Then start a session in any project and invoke the `harness` skill (in Claude
+Code: `/harness`; in Codex: `$harness`; Gemini CLI activates it from its
+description).
+
+Requirements: Python 3, the graphify and obsidian-markdown skills, and
+optionally `uv` for the skill validator and Obsidian for reading the vault.
+`harness doctor` tells you what is missing.
 
 ## Use
 
-1. Open a session in a project. Type `/harness`.
-2. It runs `status`, sees there is no harness yet, and starts the
-   **understand** phase: builds the graph, seeds the wiki, and interviews you
-   in small batches. The answers become `harness/brief.md`.
+1. Open a session in a project and invoke the skill.
+2. It runs `doctor`, `models check` and `status`, sees there is no harness
+   yet, and starts the **understand** phase: builds the graph, seeds the wiki,
+   and interviews you in small batches. The answers become `harness/brief.md`.
 3. **Architect**: it derives the roster from the brief and the graph, matches
    every role against the library, writes one note per agent, compiles them
-   into `.claude/agents/`, and shows you the roster.
+   for every tool it detects, and shows you the roster.
 4. **Operate**: from then on, work you bring is routed to agents. Every task
    ends with a ledger row. Agents append what they learned to their notes.
 5. In the background, the **gardener** merges, splits, retires and promotes
    agents automatically, asking you only when an agent is high in the chain
    and the change carries a danger flag. The **librarian** keeps the graph and
-   wiki current.
+   wiki current. The **researcher** refreshes the model registry when it goes
+   stale.
 6. At the end of a session the skill writes one to three lessons to
    `harness/evolution.md`. The **evolve** phase turns them into playbook
    improvements and a version bump.
@@ -54,20 +64,23 @@ Read [SKILL.md](SKILL.md) for the full picture and the command table.
 
 | Question | Answer |
 |---|---|
-| Which model runs an agent? | By altitude: the conductor on the newest model, leads on `opus`, specialists on `sonnet`, workers on `haiku`. See [references/model-tiers.md](references/model-tiers.md). |
-| Where does an agent's memory live? | Portable lessons in Claude Code's per-agent memory directory, which follows the agent across projects; project facts in the instance note in the vault. See [references/memory-protocol.md](references/memory-protocol.md). |
+| Which model runs an agent? | Agents declare a tier; `library/models.json` maps tiers to the current model per provider and per tool, dated and sourced. A weekly GitHub Actions job reads the official model pages: unchanged pages refresh the registry's date, new models open a pull request for the tier decision. See [references/models.md](references/models.md). |
+| Where does an agent's memory live? | Portable lessons in `library/memory/<agent>/`, which follows the agent across projects and tools; project facts in the instance note in the vault. See [references/memory-protocol.md](references/memory-protocol.md). |
 | Reuse or create? | Every role is matched against the library: strong match reuse, close match adapt with an overlay, no match create a draft. See [references/library.md](references/library.md). |
 | Who approves a merge? | Nobody, unless the agent is tier 0 or 1 **and** carries a danger signal. Then you. Every automatic change is archived, recorded as a decision, and reversible with `undo`. See [references/optimize.md](references/optimize.md). |
+| What does each tool get? | Its own native agent definition plus a generic prompt; the verified formats are in [references/targets.md](references/targets.md). |
 
 ## Layout
 
 ```
 SKILL.md              the skill: phase router and standing rules
-references/           one playbook per phase, plus interview, tiers, memory, library
+references/           one playbook per phase, plus interview, tiers, models, memory, library, targets
 templates/            every note the harness writes starts here
 library/agents/       shared agents; INDEX.md is generated; LESSONS.md is the skill's memory
-scripts/harness.py    the mechanical half: status, init, match, compile, ledger, overlap,
-                      risk, merge, split, retire, undo, promote, lessons, index, lint
+library/memory/       one folder per agent: portable memory
+library/models.json   tier-to-model registry, dated and sourced
+bundled/llm-wiki/     the llm-wiki skill, used when none is installed
+scripts/harness.py    the mechanical half, reachable as `harness`
 evals/                test prompts for the skill-creator benchmark
 docs/decisions/       why the harness is shaped this way (D001...)
 docs/log.md           what happened, newest at the bottom
@@ -75,7 +88,9 @@ docs/log.md           what happened, newest at the bottom
 
 Inside a project the harness keeps a `harness/` folder: `Harness.md` (entry),
 `brief.md`, `architecture.md`, `agents/`, `decisions/`, `ledger.md`,
-`evolution.md` and `wiki/`. Compiled agents go to `.claude/agents/`.
+`evolution.md`, `wiki/` and `compiled/`. Native agent definitions go to
+`.claude/agents/`, `.codex/agents/`, `.gemini/agents/`, `.cursor/agents/` or
+`.opencode/agents/`, whichever tools are present.
 
 ## Versioning
 

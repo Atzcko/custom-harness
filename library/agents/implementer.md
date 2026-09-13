@@ -4,7 +4,7 @@ title: Implementer
 type: agent
 version: 1
 tier: 2
-model: sonnet
+model:
 description: "Makes a bounded code or content change in a project: a feature, a fix, a refactor within one subsystem, following the project's conventions and decision notes, and verifies it before returning. Use for any well-defined change with a clear definition of done; adapt it per subsystem with an overlay that names the files, conventions and checks."
 tags: [implementation, code, feature, fix, refactor, change, subsystem]
 skills: []
