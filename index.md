@@ -24,7 +24,8 @@ same story for GitHub; `SKILL.md` is what the model reads.
 | [[D007 - The core is tool-neutral; each coding agent gets an adapter]] | notes and script are shared; only the last mile is per tool |
 | [[D008 - A dated model registry decides which model each tier runs]] | one registry change moves every agent to a newer model |
 | [[D009 - Portable memory lives in the library, not in a tool's directory]] | memory travels with the charter and is visible to every tool |
-| [[D010 - llm-wiki ships inside the harness; graphify and obsidian-markdown are checked for]] | doctor before anything; the owner's own skill travels with the harness |
+| [[D010 - llm-wiki ships inside the harness; graphify and obsidian-markdown are checked for]] | superseded by D012; doctor before anything still stands |
+| [[D012 - obsidian-markdown ships as a fallback; graphify is installed by its own tool]] | bundle what is small and stable; never bundle a file another tool generates |
 | [[D011 - A scheduled job watches the model pages; new ids open a pull request]] | facts are automated weekly; tier judgments arrive as a pull request |
 
 ## Log
