@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-13",
+  "updated": "2026-09-14",
   "providers": {
     "anthropic": {
       "ids": [
@@ -17,7 +17,7 @@
         "claude-opus-5": "2026-09-13"
       },
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview.md",
-      "last_checked": "2026-09-13"
+      "last_checked": "2026-09-14"
     },
     "openai": {
       "ids": [
@@ -131,7 +131,7 @@
         "gpt-5.3-chat-latest": "2026-09-13"
       },
       "source": "https://developers.openai.com/api/docs/models.md",
-      "last_checked": "2026-09-13"
+      "last_checked": "2026-09-14"
     },
     "google": {
       "ids": [
@@ -213,7 +213,7 @@
         "gemini-2.5-computer-use-preview-10-2025": "2026-09-13"
       },
       "source": "https://ai.google.dev/gemini-api/docs/models",
-      "last_checked": "2026-09-13"
+      "last_checked": "2026-09-14"
     }
   }
 }

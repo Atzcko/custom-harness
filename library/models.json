@@ -1,5 +1,5 @@
 {
-  "checked": "2026-09-13",
+  "checked": "2026-09-14",
   "max_age_days": 14,
   "targets": {
     "claude": "claude-code",
