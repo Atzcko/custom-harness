@@ -5,7 +5,7 @@
 #   (~/.agents/skills is the cross-tool standard; ~/.claude, ~/.codex and
 #   ~/.gemini are per-tool), creating ~/.agents/skills and ~/.claude/skills
 #   when absent
-# - links the bundled llm-wiki and obsidian-markdown into the same folders
+# - links the bundled llm-wiki, obsidian-markdown and skill-scout into the same folders
 #   where no copy of them is installed
 # - writes a `harness` launcher to ~/.local/bin so prompts and playbooks need
 #   no tool-specific path
@@ -56,10 +56,10 @@ for root in "${ROOTS[@]}"; do
   link_into "$root" harness "$HERE"
 done
 
-# bundled skills (llm-wiki, obsidian-markdown), only where no copy exists at
+# bundled skills (llm-wiki, obsidian-markdown, skill-scout), only where no copy exists at
 # all. A real folder or a link to somewhere else (for example the owner's
 # skills repository) counts as installed; only our own bundled link does not.
-for name in llm-wiki obsidian-markdown; do
+for name in llm-wiki obsidian-markdown skill-scout; do
   have=""
   for root in "$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills" "$HOME/.gemini/skills"; do
     if [ -f "$root/$name/SKILL.md" ]; then

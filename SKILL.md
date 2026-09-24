@@ -29,8 +29,8 @@ thing.
 harness doctor
 ```
 
-It checks Python, the graphify, llm-wiki and obsidian-markdown skills (the
-last two fall back to the copies bundled under `bundled/`), the launcher,
+It checks Python, the graphify, llm-wiki, obsidian-markdown and skill-scout
+skills (the last three fall back to the copies bundled under `bundled/`), the launcher,
 which tools are present, and whether the model registry is fresh. A missing
 hard dependency stops the understand phase; relay the "get it" line `doctor`
 prints rather than improvising around it. graphify is the one dependency that
@@ -163,8 +163,8 @@ knowing about too.
 - `library/` — shared agents (`agents/`), their portable memories
   (`memory/`), the tier-to-model registry (`models.json`), the index,
   archived agents, and `LESSONS.md`, the skill's own portable memory.
-- `bundled/` — the llm-wiki and obsidian-markdown skills, used when no
-  installed copy exists.
+- `bundled/` — the llm-wiki, obsidian-markdown and skill-scout skills, used
+  when no installed copy exists.
 - `docs/` — the skill's decision records and log. Read `docs/decisions/`
   before changing how the harness works; a decision note that already
   answers your question saves an argument.

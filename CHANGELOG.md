@@ -4,6 +4,27 @@ Semantic versioning. MAJOR for a change to what the harness writes into a
 project or the risk policy; MINOR for a new command, playbook, target or seed
 agent; PATCH for wording and fixes. Every entry says why, not only what.
 
+## 0.5.0 — 2026-09-24
+
+- **Agents get their skills.** The `skills:` field existed on every agent
+  and nothing ever filled it, so each agent rediscovered skills the machine
+  already had. The architect phase has a new step 3 that matches each role
+  against every installed skill with skill-scout's inventory, puts portable
+  skills on the library charter and project ones on the instance, and turns
+  gaps (browse, create, upgrade) into proposals for the user rather than
+  actions (D013).
+- **Every tool sees the list.** Only the Claude Code renderer passed
+  `skills:` on; compiled prompts now carry a "Skills" section for every
+  target. Output changes only for agents that list skills, which none did
+  before, so existing projects recompile unchanged; hence minor, not major.
+- **Optimize has a skill pass.** Ledger failures that share a method point
+  at a thin or missing skill; adding an installed skill to an agent is
+  `auto`, while upgrading, creating or installing one is always `ask`.
+- **skill-scout ships as a fallback** under `bundled/skill-scout/`, linked by
+  the installer and reported by `doctor` like llm-wiki; `doctor` now compares
+  a bundled copy's scripts as well as its markdown.
+- **`lint` warns** about an agent that lists a skill installed nowhere.
+
 ## 0.4.0 — 2026-09-14
 
 - **obsidian-markdown ships as a fallback** under `bundled/obsidian-markdown/`

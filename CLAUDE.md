@@ -46,8 +46,9 @@ Gemini CLI, Cursor and OpenCode; see `references/targets.md`. Start at
 7. **Keep `library/models.json` honest.** Change a tier's model only with
    `harness models set --source <url>` so the history records where the id
    came from; the researcher's refresh brief is in `references/models.md`.
-8. **Keep `bundled/llm-wiki/` and `bundled/obsidian-markdown/` in step with
-   the owner's copies in the skills repository.** `harness doctor` reports
+8. **Keep `bundled/llm-wiki/`, `bundled/obsidian-markdown/` and
+   `bundled/skill-scout/` in step with the owner's copies in the skills
+   repository.** `harness doctor` reports
    when they differ and which is newer; sync in the direction the owner
    wants, never silently. graphify is never bundled (D012).
 
@@ -75,7 +76,7 @@ Gemini CLI, Cursor and OpenCode; see `references/targets.md`. Start at
 | `templates/` | agent, instance, brief, architecture, decision, ledger, evolution, harness-index, wiki-schema |
 | `library/` | `agents/`, `memory/`, `archive/`, `decisions/` (L-numbered), `models.json`, `models-seen.json` (snapshot kept by `models watch`), `INDEX.md`, `LESSONS.md` |
 | `.github/workflows/models-watch.yml` | the weekly model-page check; unchanged pages commit a date bump, new ids open a pull request |
-| `bundled/` | llm-wiki and obsidian-markdown, fallbacks when not installed, each with `UPSTREAM.md` |
+| `bundled/` | llm-wiki, obsidian-markdown and skill-scout, fallbacks when not installed; third-party ones carry `UPSTREAM.md` |
 | `scripts/harness.py` | the CLI, reachable as `harness` after install |
 | `evals/evals.json` | test prompts for skill-creator |
 | `docs/` | `decisions/` (D-numbered) and `log.md` |

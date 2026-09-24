@@ -56,7 +56,43 @@ model comes from the registry for whichever tool compiles the agent. Pin a
 model with `--model` only when this project genuinely needs one specific
 model for this role, and say why in the note.
 
-## 3. Danger flags and spawn lists
+## 3. Give each agent its skills
+
+`skills:` in an instance note (and in a library charter) names the skills the
+agent works with. Claude Code preloads them; every tool gets them as a
+"Skills" section in the compiled prompt. An empty list is common and wrong:
+it leaves each agent to rediscover, task by task, skills the machine already
+has. The skill-scout skill does the matching; it travels with the harness
+under `bundled/skill-scout/` when no copy is installed.
+
+For each role, list the candidates:
+
+```bash
+python3 bundled/skill-scout/scripts/inventory.py --query "<the role's description>"
+python3 bundled/skill-scout/scripts/inventory.py --show <candidate>
+```
+
+The ranking is word overlap, a shortlist only; read a candidate before you
+give it to an agent. Then:
+
+- **List only what the agent uses on most of its tasks.** A skill in the list
+  costs context on every task. One needed now and then belongs in the
+  delegation that needs it, not in the list.
+- **Portable skills go on the library charter, project ones on the
+  instance.** Compile takes the union. A library charter must not name a
+  skill only this project has.
+- **Installed skills only.** Plugin skills are written `plugin:name` and only
+  Claude Code resolves them. Skills the conductor sees that exist on no disk
+  (account or built-in skills) cannot be passed to a subagent; mention them in
+  "Project context" instead. `harness lint` warns about a listed skill that is
+  not installed.
+- **Gaps are proposals, not actions.** Where a role needs a skill nobody has,
+  or an installed one falls short, follow skill-scout's verdicts (browse,
+  create, upgrade) as far as writing the proposal, and put it in front of the
+  user with the roster. Nothing is installed, written or edited during this
+  phase without their yes. Record accepted gaps in `H001`.
+
+## 4. Danger flags and spawn lists
 
 From the brief's "must never happen automatically" list, set `danger:` on
 every agent that could do one of those things, and set `irreversible: true`
@@ -67,14 +103,14 @@ Set `spawns:` to the children each agent may create. Leads spawn specialists,
 specialists spawn workers, workers spawn nothing. The compile step turns this
 into an allowlist the runtime enforces.
 
-## 4. Write architecture.md
+## 5. Write architecture.md
 
 From the template. It holds the roster table, the routing rules (which kind of
 request goes to which agent), escalation, budgets from the brief, and the
 background agents' cadence. Keep it to one screen; detail lives in the
 instance notes.
 
-## 5. Compile, lint, record
+## 6. Compile, lint, record
 
 ```bash
 harness compile
@@ -82,12 +118,13 @@ harness lint
 ```
 
 Write the first decision note, `H001 - Initial roster`, with the template.
-State why each lead exists and which roles were deliberately left out. Then
+State why each lead exists, which roles were deliberately left out, and
+which skill gaps were found and what the user decided about them. Then
 show the user the roster in a short table and move to `operate`.
 
 ## Changing the roster later
 
-Adding an agent is steps 2 to 5 for that one agent. Removing or merging is the
+Adding an agent is steps 2 to 6 for that one agent. Removing or merging is the
 gardener's job; see `optimize.md`. Changing a library charter is a library
 change: bump its `version`, and every project that reuses it recompiles on its
 next `status`.

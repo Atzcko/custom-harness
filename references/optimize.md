@@ -80,12 +80,26 @@ harness risk --a tester --b qa-runner
    every project that reuses the agent, so `used_in` counts toward danger and
    these are the ones most likely to be `ask`.
 
-6. **Report.** Return the list of decision ids written and which are
+6. **Skill pass.** Read the ledger for failures and partials that share a
+   kind of task. When the cause is method rather than the agent (the same
+   step goes wrong across tasks, or across agents), that is a skill problem:
+   a listed skill that is thin or outdated, or a missing one. Check with the
+   skill-scout inventory (`bundled/skill-scout/scripts/inventory.py --query`)
+   whether an installed skill already covers it; if so, add it to the
+   agent's `skills:` and recompile, which is an ordinary `auto` change. An
+   upgrade, a new skill or an install is always `ask`: skills live outside
+   the harness and other projects and tools share them. Write it as a
+   proposed decision with the ledger rows as evidence and the concrete
+   change, and stop. Never edit a skill that is vendored or shipped by a
+   plugin; propose an adapted copy instead.
+
+7. **Report.** Return the list of decision ids written and which are
    `proposed`. Nothing else; the conductor reads the notes.
 
 ## What the gardener does not do
 
 - It does not run git in the project or in the library.
 - It does not edit charters of agents it did not merge, split or promote.
+- It does not edit, install or create skills; it proposes (step 6).
 - It does not change tiers or models; it writes that in `harness/evolution.md`
   for the conductor, because model choice is a cost decision the user owns.

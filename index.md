@@ -26,6 +26,7 @@ same story for GitHub; `SKILL.md` is what the model reads.
 | [[D009 - Portable memory lives in the library, not in a tool's directory]] | memory travels with the charter and is visible to every tool |
 | [[D010 - llm-wiki ships inside the harness; graphify and obsidian-markdown are checked for]] | superseded by D012; doctor before anything still stands |
 | [[D012 - obsidian-markdown ships as a fallback; graphify is installed by its own tool]] | bundle what is small and stable; never bundle a file another tool generates |
+| [[D013 - The architect gives every agent its skills; skill-scout matches them and stays a separate skill]] | the `skills:` field was never filled; skill-scout fills it, proposes gaps, edits nothing unasked |
 | [[D011 - A scheduled job watches the model pages; new ids open a pull request]] | facts are automated weekly; tier judgments arrive as a pull request |
 
 ## Log
