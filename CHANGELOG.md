@@ -4,6 +4,17 @@ Semantic versioning. MAJOR for a change to what the harness writes into a
 project or the risk policy; MINOR for a new command, playbook, target or seed
 agent; PATCH for wording and fixes. Every entry says why, not only what.
 
+## 0.5.1 — 2026-10-03
+
+- **`models watch` no longer mistakes a newer model for a gone one.** The
+  "still listed" check accepted any page id that *started with* a registry
+  id, so `claude-opus-5` read as listed because `claude-opus-5-5` begins
+  with it, and a stale tier looked current. It now accepts the id itself or
+  a dated snapshot of it (`-YYYYMMDD`, `-YYYY-MM-DD`, `-MM-DD`), which is
+  what the prefix was for. Found on 2026-10-03, when Anthropic's page listed
+  `claude-opus-5-5` and `claude-sonnet-5-5` and no longer listed the tier 1
+  and 2 ids. Patch: a fix, no change to what the harness writes.
+
 ## 0.5.0 — 2026-09-24
 
 - **Agents get their skills.** The `skills:` field existed on every agent

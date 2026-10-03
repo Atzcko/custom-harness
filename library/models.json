@@ -1,5 +1,5 @@
 {
-  "checked": "2026-09-13",
+  "checked": "2026-10-03",
   "max_age_days": 14,
   "targets": {
     "claude": "claude-code",
@@ -24,14 +24,30 @@
       "notes": "Claude Code's own shorthands for the `model` field; each resolves to the newest model of its class, so this row upgrades itself."
     },
     "anthropic": {
-      "source": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "source": "https://platform.claude.com/docs/en/about-claude/models/overview.md",
       "tiers": {
         "0": "claude-fable-5-1",
-        "1": "claude-opus-5",
-        "2": "claude-sonnet-5",
+        "1": "claude-opus-5-5",
+        "2": "claude-sonnet-5-5",
         "3": "claude-haiku-4-5"
       },
-      "notes": "Dateless ids are pinned snapshots (no -latest). Fable 5.1 released 2026-09-01, Opus 5 2026-07-24, Sonnet 5 2026-06-30, Haiku 4.5 2025-10-01. Anthropic's guidance: start with Opus 5 and escalate to Fable 5.1 only when it falls short."
+      "notes": "owner decision 2026-10-03: claude-sonnet-5 no longer listed; claude-sonnet-5-5 first seen 2026-10-03",
+      "history": [
+        {
+          "date": "2026-10-03",
+          "tier": 1,
+          "from": "claude-opus-5",
+          "to": "claude-opus-5-5",
+          "source": "https://platform.claude.com/docs/en/about-claude/models/overview.md"
+        },
+        {
+          "date": "2026-10-03",
+          "tier": 2,
+          "from": "claude-sonnet-5",
+          "to": "claude-sonnet-5-5",
+          "source": "https://platform.claude.com/docs/en/about-claude/models/overview.md"
+        }
+      ]
     },
     "openai": {
       "source": "https://developers.openai.com/api/docs/models",

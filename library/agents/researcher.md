@@ -18,10 +18,10 @@ status: seed
 origin: harness
 created: 2026-09-13
 updated: 2026-09-13
-used_in: []
-tasks: 0
-successes: 0
-last_used:
+used_in: [unum]
+tasks: 1
+successes: 1
+last_used: 2026-09-27
 ---
 
 # Researcher

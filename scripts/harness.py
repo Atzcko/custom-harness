@@ -1086,7 +1086,7 @@ def build_spec(ctx: Ctx, name: str, path: Path, fm: dict, body: str, lib: dict, 
 
 def working_rules(spec: dict, ctx: Ctx, model: str) -> str:
     cmd = harness_cmd()
-    ledger_cmd = (f'{cmd} ledger add --project "{ctx.project}" --agent {spec["name"]} '
+    ledger_cmd = (f'{cmd} --project "{ctx.project}" ledger add --agent {spec["name"]} '
                   f'--task "<short description>" --outcome ok|partial|fail --model {model or "<model>"}')
     danger_txt = ", ".join(str(d) for d in spec["danger"]) if spec["danger"] else "none"
     mem = f'{spec["memory_dir"]}/MEMORY.md'
@@ -2036,7 +2036,10 @@ def cmd_models_watch(ctx: Ctx, args) -> int:
             continue
         for tier, mid in (entry.get("tiers") or {}).items():
             mid_s = str(mid)
-            ok = any(mid_s == i or i.startswith(mid_s) for i in page["ids"])
+            # the id itself or a dated snapshot of it; a bare prefix would let a newer
+            # version (claude-opus-5-5) stand in for one that is gone (claude-opus-5)
+            dated = re.compile(re.escape(mid_s) + r"-(?:\d{8}|\d{4}-\d{2}-\d{2}|\d{2}-\d{2})")
+            ok = any(i == mid_s or dated.fullmatch(i) for i in page["ids"])
             lines.append(f"- {prov} tier {tier} `{mid_s}`: {'listed' if ok else 'NOT FOUND on the page'}")
             if not ok:
                 registry_missing.append(f"{prov} tier {tier} {mid_s}")

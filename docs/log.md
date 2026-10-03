@@ -102,3 +102,22 @@ Append-only, newest at the bottom. What happened; the decisions say why.
   fills it, optimize's skill pass proposes upgrades from ledger evidence,
   compiled prompts carry the list to every tool, skill-scout is bundled as a
   fallback. D013.
+
+## 2026-10-03 — v0.5.1, model watch fix; registry tiers 1–2; argus promoted
+
+- The owner made agent upkeep a standing job for the Argus session. Its first
+  audit found the registry 20 days stale, and `models watch` showed why
+  nobody had noticed: Anthropic's page now lists `claude-opus-5-5` and
+  `claude-sonnet-5-5`, yet tier 1 and 2 ids read as "listed" because the
+  check accepted any id that started with the registry id. Fixed to accept
+  the id or a dated snapshot only, tested on a scratch library; 0.5.1.
+- Owner decision: anthropic tier 1 is `claude-opus-5-5` and tier 2
+  `claude-sonnet-5-5`, set with `models set --source` so the history
+  records it. Claude Code agents were already on the newest models through
+  their aliases.
+- `argus` (the Argus vault's PM agent, 5 of 5 tasks ok) was promoted into
+  the library on the owner's approval; the charter was made project-neutral
+  and its empty template sections filled.
+- Noticed, not fixed: a linked agent's compiled prompt shows "## Charter"
+  twice, because the library body starts with that heading and the renderer
+  adds its own.
