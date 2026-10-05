@@ -1,23 +1,25 @@
 {
-  "updated": "2026-09-21",
+  "updated": "2026-10-05",
   "providers": {
     "anthropic": {
       "ids": [
         "claude-fable-5-1",
         "claude-haiku-4-5",
         "claude-haiku-4-5-20251001",
-        "claude-opus-5",
-        "claude-sonnet-5"
+        "claude-opus-5-5",
+        "claude-sonnet-5-5"
       ],
       "first_seen": {
         "claude-haiku-4-5-20251001": "2026-09-13",
         "claude-sonnet-5": "2026-09-13",
         "claude-haiku-4-5": "2026-09-13",
         "claude-fable-5-1": "2026-09-13",
-        "claude-opus-5": "2026-09-13"
+        "claude-opus-5": "2026-09-13",
+        "claude-opus-5-5": "2026-10-05",
+        "claude-sonnet-5-5": "2026-10-05"
       },
       "source": "https://platform.claude.com/docs/en/about-claude/models/overview.md",
-      "last_checked": "2026-09-21"
+      "last_checked": "2026-10-05"
     },
     "openai": {
       "ids": [
@@ -73,7 +75,11 @@
         "gpt-5.6-luna",
         "gpt-5.6-sol",
         "gpt-5.6-terra",
-        "gpt-6-astra"
+        "gpt-6-astra",
+        "gpt-6-luna",
+        "gpt-6-sol",
+        "gpt-6.1",
+        "gpt-6.1-sol"
       ],
       "first_seen": {
         "gpt-5.6": "2026-09-13",
@@ -128,10 +134,14 @@
         "gpt-4o-mini-search-preview": "2026-09-13",
         "gpt-5.3": "2026-09-13",
         "gpt-4.1-mini": "2026-09-13",
-        "gpt-5.3-chat-latest": "2026-09-13"
+        "gpt-5.3-chat-latest": "2026-09-13",
+        "gpt-6.1-sol": "2026-10-05",
+        "gpt-6-luna": "2026-10-05",
+        "gpt-6.1": "2026-10-05",
+        "gpt-6-sol": "2026-10-05"
       },
       "source": "https://developers.openai.com/api/docs/models.md",
-      "last_checked": "2026-09-21"
+      "last_checked": "2026-10-05"
     },
     "google": {
       "ids": [
@@ -172,6 +182,8 @@
         "gemini-3.6-flash",
         "gemini-3.7-flash",
         "gemini-3.8-flash",
+        "gemini-3.8-flash-lite-tts",
+        "gemini-3.8-flash-tts",
         "gemini-3.8-live",
         "gemini-3.8-live-extended-thinking"
       ],
@@ -214,10 +226,12 @@
         "gemini-2.5-flash-native-audio-preview-12-2025": "2026-09-13",
         "gemini-2.5-computer-use-preview-10-2025": "2026-09-13",
         "gemini-3.8-live": "2026-09-21",
-        "gemini-3.8-live-extended-thinking": "2026-09-21"
+        "gemini-3.8-live-extended-thinking": "2026-09-21",
+        "gemini-3.8-flash-lite-tts": "2026-10-05",
+        "gemini-3.8-flash-tts": "2026-10-05"
       },
       "source": "https://ai.google.dev/gemini-api/docs/models",
-      "last_checked": "2026-09-21"
+      "last_checked": "2026-10-05"
     }
   }
 }
